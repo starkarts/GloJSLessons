@@ -1,9 +1,22 @@
-let money = 50000;
+let isNumber = function(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+};
+
+let money;
 let income = 10000;
 let addExpenses;
 let deposit = true;
 let mission = 200000;
 let period = 5;
+
+let start = function() {
+  do {
+    money = +prompt('Ваш месячный доход?');
+  }
+  while (!isNumber(money));
+};
+
+start();
 
 function showTypeOf(data) {
   console.log(data, typeof(data));
@@ -13,24 +26,32 @@ showTypeOf(money);
 showTypeOf(income);
 showTypeOf(deposit);
 
-money = +prompt('Ваш месячный доход?');
 addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую');
 console.log(addExpenses.toLowerCase().split(', '));
 
 deposit = confirm('Есть ли у вас депозит в банке?');
 
-let expenses1 = prompt('Введите обязательую статью расходов?'),
-    amount1 = +prompt('Во сколько это обойдется?'),
-    expenses2 = prompt('Введите обязательую статью расходов?'),
-    amount2 = +prompt('Во сколько это обойдется?');
+let expenses = [];
 
-function getExpensesMonth() {
-  return amount1 + amount2;
-}
-console.log('Расходы за месяц ' + getExpensesMonth());
+let getExpensesMonth = function() {
+  let sum = 0;
+  
+  for (let i = 0; i < 2; i++) {
+      
+    expenses[i] = prompt('Введите обязательую статью расходов?');
+
+    sum += +prompt('Во сколько это обойдется?');
+    }
+    console.log(expenses);
+    return sum;
+};
+
+let expensesAmount = getExpensesMonth();
+
+console.log('Расходы за месяц: ' + expensesAmount);
 
 function getAccumulatedMonth() {
-  return money - amount1 - amount2;
+  return money - expensesAmount;
 }
 getAccumulatedMonth();
 
@@ -42,7 +63,11 @@ console.log('Бюджет на день: ' + Math.floor(budgetDay));
 function getTargetMonth() {
   return mission / accumulatedMonth;
 }
-console.log('Срок достижения цели ' + Math.ceil(getTargetMonth()) + ' месяцев');
+
+if (getTargetMonth() > 0) {
+console.log('Срок достижения цели ' + Math.ceil(getTargetMonth()) + ' месяцев'); } else {
+	console.log('Цель не будет достигнута');
+}
 
 let getStatusIncome = function() {
   if (budgetDay < 0) {
