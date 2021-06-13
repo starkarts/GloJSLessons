@@ -48,7 +48,7 @@ let appData = {
 		let addExpenses,
 				amount;
 		do {
-			addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую');
+			addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую', 'Транспорт,кварплата,интернет');
 		} 
 		while (!isNaN(addExpenses));
 
@@ -134,3 +134,27 @@ for (let key in appData) {
 }
 
 console.log(appData.addExpenses);
+
+
+
+let сalculation = document.querySelector('#start'),
+	plusIncome = document.querySelector('button.income_add'),
+	plusExpenses = document.querySelector('button.expenses_add'),
+	depositCheck = document.querySelector('#deposit-check'),
+	additionalIncomeItem = document.querySelectorAll('.additional_income-item'),
+	budgetDayValue = document.getElementsByClassName('budget_day-value')[0],
+	expensesMonthValue = document.getElementsByClassName('expenses_month-value')[0],
+	additionalIncomeValue = document.getElementsByClassName('additional_income-value')[0],	
+	additionalExpensesValue = document.getElementsByClassName('additional_expenses-value')[0],		
+	incomePeriodValue = document.getElementsByClassName('income_period-value')[0],
+	targetMonthValue = document.getElementsByClassName('target_month-value')[0],
+	salaryAmount = document.querySelector('.salary-amount'),		
+	incomeTitle = document.querySelector('input.income-title'),		
+	incomeAmount = document.querySelector('.income-amount'),
+	expensesTitle = document.querySelector('input.expenses-title'),		
+	expensesAmount = document.querySelector('.expenses-amount'),
+	additionalExpensesItem = document.querySelector('.additional_expenses-item'),
+	targetAmount = document.querySelector('.target-amount'),
+	periodSelect = document.querySelector('.period-select');
+
+	
