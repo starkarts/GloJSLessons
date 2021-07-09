@@ -1,6 +1,7 @@
 'use strict';
 
 let start = document.querySelector('#start'),
+	cancel = document.querySelector('#cancel'),
 	plusIncome = document.querySelector('button.income_add'),
 	plusExpenses = document.querySelector('button.expenses_add'),
 	depositCheck = document.querySelector('#deposit-check'),
@@ -40,28 +41,38 @@ let appData = {
 	percentDeposit: 0,
 	moneyDeposit: 0,
 	check: function() {
-		salaryAmount.addEventListener('input', function() {
-			if (salaryAmount.value === '') {
-				start.disabled = true;
-			} else {
-				start.disabled = false;
-			}
-		});
+		if (salaryAmount.value !== '') {
+			start.removeAttribute('disabled');
+		} 
 	},
 	start: function() {
+		if (salaryAmount.value === '') {
+			start.setAttribute('disabled', 'true');
+			return;
+		}
+
+		let allInput = document.querySelectorAll('.data input[type = text]');
+		allInput.forEach(function(item) {
+			item.setAttribute('disabled', 'disabled');
+		});
 		
-		appData.check();
-	
-		appData.budget = +salaryAmount.value;
+		plusExpenses.setAttribute('disabled', 'disabled');
+		plusIncome.setAttribute('disabled', 'disabled');
+		start.style.display = 'none';
+		cancel.style.display = 'block';
+
+		this.budget = +salaryAmount.value;
+
+		this.getExpenses();
+		this.getIncome();
+		this.getExpensesMonth();
+		this.getAddExpenses();
+		this.getAddIncome();
+		this.getBudget();
+		this.getInfoDeposit();
+		this.getStatusIncome();
+		this.showResult();
 		
-		appData.getExpenses();
-		appData.getIncome();
-		appData.getExpensesMonth();
-		appData.getAddExpenses();
-		appData.getAddIncome();
-		appData.getBudget();
-		
-		appData.showResult();
 	},
 	showResult: function() {
 		budgetMonthValue.value = appData.budgetMonth;
@@ -162,17 +173,63 @@ let appData = {
 	changePeriodValue: function() {
 		periodAmount.textContent = periodSelect.value;
 	}, 
+	reset: function() {
+		let inputTextData = document.querySelectorAll('.data input[type = text]'),
+				resultInputAll = document.querySelectorAll('.result input[type = text]');
+		
+		inputTextData.forEach(function(elem) {
+			elem.value = '';
+			elem.removeAttribute('disabled');
+			periodSelect.value = '0';
+			periodAmount.innerHTML = periodSelect.value;
+		});
+		resultInputAll.forEach(function(elem) {
+			elem.value = '';
+		});
+
+		for (let i = 1; i < incomeItems.length; i++) {
+		incomeItems[i].parentNode.removeChild(incomeItems[i]);
+		plusIncome.style.display = 'block';
+		}
+		for (let i = 1; i < expensesItems.length; i++) {
+		expensesItems[i].parentNode.removeChild(expensesItems[i]);
+		plusExpenses.style.display = 'block';
+		}
+
+		this.budget = 0;
+		this.budgetDay = 0;
+		this.budgetMonth = 0;
+		this.income = {};
+		this.incomeMonth = 0;
+		this.addIncome = [];
+		this.expenses = {};
+		this.expensesMonth = 0;
+		this.deposit = false;
+		this.percentDeposit = 0;
+		this.moneyDeposit = 0;
+		this.addExpenses = [];
+
+
+		cancel.style.display = 'none';
+		start.style.display = 'block';
+		plusExpenses.removeAttribute('disabled');
+		plusIncome.removeAttribute('disabled');
+		depositCheck.checked = false;
+	}
 };
 
 
-start.addEventListener('click', appData.start);
+start.addEventListener('click', appData.start.bind(appData));
 
-plusExpenses.addEventListener('click', appData.addExpensesBlock);
+plusExpenses.addEventListener('click', appData.addExpensesBlock.bind(appData));
 
-plusIncome.addEventListener('click', appData.addIncomeBlock);
+plusIncome.addEventListener('click', appData.addIncomeBlock.bind(appData));
 
-periodSelect.addEventListener('input', appData.changePeriodValue);
+periodSelect.addEventListener('input', appData.changePeriodValue.bind(appData));
 
+salaryAmount.addEventListener('keyup', appData.check);
+
+cancel.addEventListener('click', appData.reset);
 
 if (appData.getTargetMonth() > 0) {
 console.log('Срок достижения цели ' + Math.ceil(appData.getTargetMonth()) + ' месяцев'); 
@@ -182,14 +239,6 @@ console.log('Срок достижения цели ' + Math.ceil(appData.getTar
 
 appData.getStatusIncome();
 
-for (let key in appData) {
-	console.log('Наша программа включает в себя данные: ' + key + ':' + appData[key]);
-}
-
-
-
-
-
-
-
-	
+// for (let key in appData) {
+// 	console.log('Наша программа включает в себя данные: ' + key + ':' + appData[key]);
+// }
